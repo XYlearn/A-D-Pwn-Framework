@@ -1,0 +1,11 @@
+{
+    "defaults": {
+        "ips": [
+            "0.0.0.0"
+        ],
+        "enable": true,
+        "keep_shell": true,
+        "cat_flag": "cat flag",
+        "flag_pattern": "\\w+"
+    }
+}
