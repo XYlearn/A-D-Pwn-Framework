@@ -37,16 +37,26 @@ class Submitter(Thread):
         self.queue = queue
 
     def do_submit(self, flag):
-        with open(os.path.join(awdpwn_path, 'submit.json'), 'r') as f:
-            meta_str = f.read()
-            meta_str.format(flag=flag)
-            meta = json.loads(meta_str)
+        submit_json = config.get('submit', 'submit_json', fallback='submit.json')
+        submit_json = os.path.join(awdpwn_path, submit_json)
+        try:
+            with open(submit_json, 'r') as f:
+                meta_str = f.read()
+                meta_str.replace('{flag}', flag)
+                meta = json.loads(meta_str)
+        except IOError as e:
+            logger.info("[-] Fail to find submit_json %s", repr(submit_json))
+            return False
+        except json.JSONDecodeError as e:
+            logger.info("[-] Fail to decode submit_json %s", repr(submit_json))
+            return False
         try:
             response = requests.post(self.url, timeout=2.0, **meta)
-        except Exception:
-            msg = "[-] Submit flag : [{}] ... !!Failed!! ({})".format(
-                flag, "Can't post to {}".format(self.url))
-            logger.info(msg)
+        except Exception as ex:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            logger.info("[-] Submit flag : [%s] ... !!Failed!! %s(%s) at %s:%d",
+                flag, exc_type, ''.join(ex.args), fname, exc_tb.tb_lineno)
             return False
         content = response.content
         if self.fail_text in content:
@@ -67,9 +77,10 @@ class Submitter(Thread):
             confirm_exit()
             self.queue.put(flag)
         except Exception as ex:
-            msg = "[-] Submit flag : [{}] ... !!Failed!! ({})".format(
-                flag, ' '.join(ex.args))
-            logger.info(msg)
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            logger.info("[-] Submit flag : [%s] ... !!Failed!! %s(%s) at %s:%d",
+                flag, exc_type, ''.join(ex.args), fname, exc_tb.tb_lineno)
             return False
 
     def run(self):

@@ -125,8 +125,10 @@ class Pwner(Thread):
             except KeyboardInterrupt:
                 confirm_exit()
             except Exception as ex:
-                logger.info("[-] Pwn %s %s:%d ... Exception(%s)",
-                            name, ip, port, ''.join(str(ex)))
+                exc_type, exc_obj, exc_tb = sys.exc_info()
+                fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                logger.info("[-] Pwn %s %s:%d ... %s(%s) at %s:%d",
+                            name, ip, port, exc_type, ''.join(str(ex)), fname, exc_tb.tb_lineno)
                 # ex.with_traceback()
 
     def load_exp(self, exp_path):

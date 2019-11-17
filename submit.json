@@ -1,0 +1,14 @@
+{
+    "data": {
+        "flag": "{flag}"
+    },
+    "headers": {
+        "Accept-Encoding": "gzip, deflate",
+        "Host": "0.0.0.0:8080",
+        "Origin": "http://0.0.0.0:8080",
+        "Referer": "http://0.0.0.0:8080/arace/index",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36"
+    },
+    "cookies": {
+    }
+}

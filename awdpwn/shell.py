@@ -193,8 +193,11 @@ class ShellManagerServer(Thread):
             self.sock.bind((host, port))
             self.sock.listen(5)
         except Exception as ex:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             logger.info(
-                "[-] Fail to start ShellManagerServer ... Exception(%s)", ''.join(ex.args))
+                "[-] Fail to start ShellManagerServer ... %s(%s) at %s:%d",
+                exc_type, ''.join(ex.args), fname, exc_tb.tb_lineno)
             return
         logger.info("[+] ShellManagerServer listen on %s:%d", host, port)
 
@@ -213,8 +216,12 @@ class ShellManagerServer(Thread):
         except OSError as e:
             pass
         except Exception as e:
-            # pass
-            e.with_traceback()
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            logger.info(
+                "[-] Fail to handle ShellManagerClient ... %s(%s) at %s:%d",
+                exc_type, ''.join(ex.args), fname, exc_tb.tb_lineno)
+            return
         logger.info(
             "[+] Client %s:%d disconnect from ShellManagerServer", addr[0], addr[1])
 
