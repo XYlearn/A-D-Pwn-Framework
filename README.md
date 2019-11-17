@@ -46,6 +46,7 @@ python manage.py run
 ├── requirements.txt
 ├── scripts # assists scripts
 │   └── anastream.py # analyze tcp streams and extract exploit scripts
+├── submit.json # define structure of flag submission
 └── targets.json # configurations that are target/gamebox specific
 ```
 
@@ -99,6 +100,11 @@ When the framework start, the shell manager service is also started. You can con
 python manage.py sm
 ```
 This command will spawn a cli client and connect to service whose host and port is configured in `config.ini`. Then you can cat flag, execute command and interact with shell. But the interactive shell is a simple hack one, and don't support some interactive command like vim, nano, etc.
+
+
+### Write submitter
+
+Usually we only need to change structure defined in `submit.json` to make the submitter works. If it can't meet your requirement, you can just modify the `Submitter.do_submit` function in `awdpwn/submit.py`. May be more usable submitter in competition will be integrated into the framework.
 
 
 ### Log
