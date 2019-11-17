@@ -16,7 +16,10 @@ import click
 import shutil
 
 from watchdog.observers import Observer
-from queue import Queue
+if sys.version_info[0] < 3:
+    from Queue import Queue
+else:
+    from queue import Queue
 
 from awdpwn.utils import (
     n2mn, mn2p, TargetsManager, confirm_exit, alarm_incomplete
