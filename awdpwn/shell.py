@@ -187,8 +187,8 @@ class ShellManagerServer(Thread):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     def run(self):
-        host = config['shell']['host']
-        port = int(config['shell']['port'])
+        host = config.get('shell','host')
+        port = int(config.get('shell', 'port'))
         try:
             self.sock.bind((host, port))
             self.sock.listen(5)
@@ -225,8 +225,8 @@ class ShellManagerClient:
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     def start(self):
-        host = config['shell']['server_host']
-        port = int(config['shell']['server_port'])
+        host = config.get('shell', 'server_host')
+        port = int(config.get('shell', 'server_port'))
         try:
             self.sock.connect((host, port))
         except IOError:

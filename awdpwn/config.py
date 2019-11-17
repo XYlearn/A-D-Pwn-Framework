@@ -7,9 +7,13 @@
 # this stuff is worth it, you can buy me a cup of tea in return. XYlearn       #
 # ---------------------------------------------------------------------------- #
 
+import sys
 import os
 
-from configparser import ConfigParser
+if sys.version_info[0] < 3:
+    from ConfigParser import ConfigParser
+else:
+    from configparser import ConfigParser
 
 awdpwn_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 

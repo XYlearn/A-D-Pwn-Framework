@@ -8,17 +8,23 @@
 # ---------------------------------------------------------------------------- #
 
 
-import time
 import sys
+import os
+import time
+import json
 
 from threading import Thread
-from queue import Queue
+if sys.version_info[0] < 3:
+    from Queue import Queue
+else:
+    from queue import Queue
+
 
 import requests
 
 from .log import logger
 from .config import config
-from .utils import confirm_exit
+from .utils import confirm_exit, awdpwn_path
 
 
 class Submitter(Thread):
@@ -31,11 +37,12 @@ class Submitter(Thread):
         self.queue = queue
 
     def do_submit(self, flag):
-        data = {
-            "flag": flag,
-        }
+        with open(os.path.join(awdpwn_path, 'submit.json'), 'r') as f:
+            meta_str = f.read()
+            meta_str.format(flag=flag)
+            meta = json.loads(meta_str)
         try:
-            response = requests.post(self.url, data=data, timeout=2.0)
+            response = requests.post(self.url, timeout=2.0, **meta)
         except Exception:
             msg = "[-] Submit flag : [{}] ... !!Failed!! ({})".format(
                 flag, "Can't post to {}".format(self.url))
